@@ -136,6 +136,7 @@ const SFX = {
 function stageVis(id) {
   const el = document.getElementById(id); if (!el) return 0;
   const r = el.getBoundingClientRect(), vh = innerHeight;
+  if (!(r.height > 0) || !(vh > 0)) return 0;
   const overlap = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
   return clamp(overlap / Math.min(r.height, vh), 0, 1);
 }
@@ -192,19 +193,45 @@ function audioTick(dt) {
   if (!AU.ctx || !AU.on) return;
   const t = anow();
   for (const b of AU.beds) {
-    const target = b.levelFn(stageVis(b.stageId));
+    const target = clamp(b.levelFn(stageVis(b.stageId)) || 0, 0, 1);
     b.g.gain.setTargetAtTime(target, t, 0.4);
     b.level = target;
     if (b.schedule && target > 0.04) b.schedule(b, dt);
   }
 }
+// A short silent WAV. Playing it through an <audio> element switches iOS to the
+// "playback" audio session, so Web Audio is heard even with the ringer switch on silent.
+function silentWavUrl() {
+  const rate = 8000, n = rate / 2, buf = new ArrayBuffer(44 + n), v = new DataView(buf);
+  const str = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+  str(0, "RIFF"); v.setUint32(4, 36 + n, true); str(8, "WAVE"); str(12, "fmt "); v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, rate, true); v.setUint32(28, rate, true);
+  v.setUint16(32, 1, true); v.setUint16(34, 8, true); str(36, "data"); v.setUint32(40, n, true);
+  for (let i = 0; i < n; i++) v.setUint8(44 + i, 128);
+  return URL.createObjectURL(new Blob([buf], { type: "audio/wav" }));
+}
+// Must run inside a user gesture (tap, click or key press).
+function unlockAudio() {
+  if (!AU.on || !auEnsure()) return;
+  try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) { /* not supported */ }
+  if (!AU.silent) {
+    AU.silent = new Audio(silentWavUrl());
+    AU.silent.loop = true; AU.silent.setAttribute("playsinline", ""); AU.silent.preload = "auto";
+  }
+  AU.silent.play().catch(() => {});
+  if (AU.ctx.state !== "running") AU.ctx.resume().catch(() => {});
+  // a one-sample buffer started in the gesture unlocks older iOS versions
+  const b = AU.ctx.createBuffer(1, 1, 22050), src = AU.ctx.createBufferSource();
+  src.buffer = b; src.connect(AU.ctx.destination); src.start(0);
+}
 function setSound(on) {
   if (on && !auEnsure()) return;
   AU.on = on;
   if (AU.ctx) {
-    if (on && AU.ctx.state !== "running") AU.ctx.resume();
+    if (on && AU.ctx.state !== "running") AU.ctx.resume().catch(() => {});
     AU.master.gain.setTargetAtTime(on ? 0.9 : 0, AU.ctx.currentTime, 0.12);
   }
+  if (!on && AU.silent) AU.silent.pause();
   const b = $("#sound-toggle");
   if (b) { b.setAttribute("aria-pressed", String(on)); $(".label", b).textContent = on ? "Sound on" : "Sound off"; }
 }
@@ -272,7 +299,7 @@ function placeLabels(st) {
 let lastT = performance.now();
 function tick(now) {
   const dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
-  audioTick(dt);
+  try { audioTick(dt); } catch (e) { /* sound must never stop rendering */ }
   for (const st of STAGES) {
     if (!st.visible || !st.ready) continue;
     if (st.update) st.update(dt, now / 1000);
@@ -1792,16 +1819,19 @@ function boot() {
   // Sound is on by default. Browsers only allow audio after a user gesture,
   // so it starts on the first click, tap or key press (or right away if allowed).
   const sb = $("#sound-toggle");
-  if (sb) sb.addEventListener("click", () => { unlockArmed = false; setSound(!AU.on); });
-  let unlockArmed = true;
+  if (sb) sb.addEventListener("click", () => { setSound(!AU.on); unlockAudio(); });
   setSound(true);
+  // Mobile browsers only start audio from a tap/click/key gesture (not touchstart or pointerdown),
+  // and may suspend it again when the page is backgrounded, so keep listening until it runs.
   const unlock = (e) => {
-    if (!unlockArmed || (sb && sb.contains(e.target))) return;
-    unlockArmed = false;
-    if (AU.on) setSound(true);
-    ["pointerdown", "keydown", "touchend"].forEach((t) => removeEventListener(t, unlock, true));
+    if (!AU.on || (sb && sb.contains(e.target))) return;
+    if (AU.ctx && AU.ctx.state === "running" && AU.silent && !AU.silent.paused) return;
+    unlockAudio();
   };
-  ["pointerdown", "keydown", "touchend"].forEach((t) => addEventListener(t, unlock, true));
+  ["touchend", "click", "keydown", "pointerup"].forEach((t) => addEventListener(t, unlock, { capture: true, passive: true }));
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && AU.on && AU.ctx && AU.ctx.state !== "running") AU.ctx.resume().catch(() => {});
+  });
   const gl = document.createElement("canvas").getContext("webgl2");
   if (!gl) { $$(".stage").forEach((el) => stageMessage(el, "These 3D scenes need WebGL 2, which is turned off or unsupported in this browser.")); return; }
   ["#hero-stage", "#church-stage", "#krus-stage"].forEach((s) => stageMessage($(s), "Loading real terrain, imagery and map data…"));
