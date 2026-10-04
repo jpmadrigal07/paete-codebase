@@ -1,5 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
-<title>Paete, Laguna</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paete, Laguna: Carving Capital of the Philippines in 3D</title>
+<meta name="description" content="Explore Paete, Laguna in interactive 3D: carve wood (ukit), make a taka papier-mâché horse, tour St. James the Apostle Parish Church and climb the steps to Tatlong Krus.">
+<link rel="canonical" href="https://paete.jpmadrigal.dev/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="JP Madrigal">
+<meta name="theme-color" content="#17110c">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Paete, Laguna">
+<meta property="og:locale" content="en_PH">
+<meta property="og:url" content="https://paete.jpmadrigal.dev/">
+<meta property="og:title" content="Paete, Laguna: Carving Capital of the Philippines in 3D">
+<meta property="og:description" content="Explore Paete, Laguna in interactive 3D: carve wood (ukit), make a taka papier-mâché horse, tour St. James the Apostle Parish Church and climb the steps to Tatlong Krus.">
+<meta property="og:image" content="https://paete.jpmadrigal.dev/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="3D view of Paete, Laguna between Laguna de Bay and the Sierra Madre, with Tatlong Krus on the ridge above the town">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Paete, Laguna: Carving Capital of the Philippines in 3D">
+<meta name="twitter:description" content="Explore Paete, Laguna in interactive 3D: carve wood (ukit), make a taka papier-mâché horse, tour St. James the Apostle Parish Church and climb the steps to Tatlong Krus.">
+<meta name="twitter:image" content="https://paete.jpmadrigal.dev/og-image.jpg">
+<meta name="twitter:image:alt" content="3D view of Paete, Laguna between Laguna de Bay and the Sierra Madre">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" crossorigin>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebSite",
+   "@id": "https://paete.jpmadrigal.dev/#website",
+   "url": "https://paete.jpmadrigal.dev/",
+   "name": "Paete, Laguna",
+   "inLanguage": "en",
+   "publisher": {
+    "@id": "https://paete.jpmadrigal.dev/#author"
+   }
+  },
+  {
+   "@type": "Person",
+   "@id": "https://paete.jpmadrigal.dev/#author",
+   "name": "JP Madrigal",
+   "url": "https://www.jpmadrigal.dev"
+  },
+  {
+   "@type": "WebPage",
+   "@id": "https://paete.jpmadrigal.dev/#webpage",
+   "url": "https://paete.jpmadrigal.dev/",
+   "name": "Paete, Laguna: Carving Capital of the Philippines in 3D",
+   "description": "Explore Paete, Laguna in interactive 3D: carve wood (ukit), make a taka papier-mâché horse, tour St. James the Apostle Parish Church and climb the steps to Tatlong Krus.",
+   "inLanguage": "en",
+   "isPartOf": {
+    "@id": "https://paete.jpmadrigal.dev/#website"
+   },
+   "about": {
+    "@id": "https://paete.jpmadrigal.dev/#paete"
+   },
+   "author": {
+    "@id": "https://paete.jpmadrigal.dev/#author"
+   },
+   "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "https://paete.jpmadrigal.dev/og-image.jpg",
+    "width": 1200,
+    "height": 630
+   }
+  },
+  {
+   "@type": "TouristDestination",
+   "@id": "https://paete.jpmadrigal.dev/#paete",
+   "name": "Paete",
+   "alternateName": "Carving Capital of the Philippines",
+   "description": "Lakeshore town in Laguna, Philippines, known for wood carving (ukit) and papier-mâché (taka). The parish was founded in 1580, and the town was declared the Carving Capital of the Philippines in 2005.",
+   "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 14.3641,
+    "longitude": 121.4816
+   },
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Paete",
+    "addressRegion": "Laguna",
+    "postalCode": "4016",
+    "addressCountry": "PH"
+   },
+   "containedInPlace": {
+    "@type": "AdministrativeArea",
+    "name": "Laguna, Philippines"
+   },
+   "touristType": [
+    "Cultural tourism",
+    "Religious tourism",
+    "Hiking"
+   ],
+   "includesAttraction": [
+    {
+     "@id": "https://paete.jpmadrigal.dev/#simbahan"
+    },
+    {
+     "@id": "https://paete.jpmadrigal.dev/#tatlong-krus"
+    }
+   ]
+  },
+  {
+   "@type": [
+    "Church",
+    "TouristAttraction"
+   ],
+   "@id": "https://paete.jpmadrigal.dev/#simbahan",
+   "name": "St. James the Apostle Parish Church",
+   "alternateName": [
+    "Paete Church",
+    "Church of Paete",
+    "San Santiago Apostol Parish Church"
+   ],
+   "description": "Baroque church of volcanic tuff, first built in stone in 1646, home to José Luciano Dans's Langit, Lupa at Impiyerno murals. National Cultural Treasure (2015).",
+   "url": "https://paete.jpmadrigal.dev/#simbahan",
+   "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 14.364553,
+    "longitude": 121.4817725
+   },
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Paete",
+    "addressRegion": "Laguna",
+    "addressCountry": "PH"
+   }
+  },
+  {
+   "@type": "TouristAttraction",
+   "@id": "https://paete.jpmadrigal.dev/#tatlong-krus",
+   "name": "Tatlong Krus",
+   "alternateName": "Three Crosses of Paete",
+   "description": "Three concrete crosses on the summit of Mount Humarap above Paete, reached by about 1,000 steps; a Holy Week pilgrimage site.",
+   "url": "https://paete.jpmadrigal.dev/#tatlong-krus",
+   "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 14.3649636,
+    "longitude": 121.4923291
+   }
+  }
+ ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Commissioner:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
@@ -36,6 +195,9 @@
 }
 
 * { box-sizing: border-box; }
+html, body { margin: 0; }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.6; }
 a { color: var(--accent); }
 .wrap { max-width: 1200px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); }
@@ -68,6 +230,8 @@ a { color: var(--accent); }
   background: linear-gradient(to top, var(--scrim) 0%, var(--scrim) 30%, transparent 100%); pointer-events: none; }
 .hero-copy .wrap > * { pointer-events: none; }
 .drag-hint { position: absolute; right: 16px; top: 16px; z-index: 3; font-family: var(--f-data); font-size: 11px; letter-spacing: 0.06em; color: var(--on-scene); background: rgba(16, 11, 8, 0.6); padding: 6px 10px; border-radius: 999px; pointer-events: none; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+h2 .eyebrow { display: block; margin-bottom: 10px; line-height: 1.6; }
 .eyebrow { font-family: var(--f-data); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0; }
 .hero h1 { font-family: var(--f-display); font-weight: 400; font-size: clamp(64px, 12vw, 148px); line-height: 0.9; margin: 8px 0 10px; letter-spacing: -0.01em; }
 .hero p.lede { margin: 0; max-width: 36rem; font-size: clamp(16px, 2vw, 19px); text-wrap: balance; }
@@ -78,7 +242,7 @@ a { color: var(--accent); }
 /* feature rows: text on top, full-bleed 3D stage below */
 .feature { padding-block: clamp(56px, 8vw, 96px) 0; border-bottom: 1px solid var(--line); }
 .feature .text { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 8px clamp(24px, 5vw, 72px); align-items: start; margin-bottom: clamp(28px, 4vw, 44px); }
-.feature h2 { font-family: var(--f-display); font-weight: 400; font-size: clamp(40px, 5.4vw, 64px); line-height: 1; margin: 10px 0 0; text-wrap: balance; }
+.feature h2 { font-family: var(--f-display); font-weight: 400; font-size: clamp(40px, 5.4vw, 64px); line-height: 1; margin: 0; text-wrap: balance; }
 .feature h2 em { font-style: normal; color: var(--dim); font-size: 0.5em; display: block; margin-top: 12px; font-family: var(--f-body); letter-spacing: 0; }
 .feature .body { padding-top: 6px; }
 .feature p { margin: 0 0 14px; max-width: 62ch; }
@@ -135,7 +299,7 @@ a { color: var(--accent); }
 
 /* more */
 .more { padding-block: clamp(56px, 8vw, 96px); border-bottom: 1px solid var(--line); }
-.more h2, .visit h2 { font-family: var(--f-display); font-weight: 400; font-size: clamp(34px, 4.6vw, 52px); line-height: 1.05; margin: 10px 0 28px; text-wrap: balance; }
+.more h2, .visit h2 { font-family: var(--f-display); font-weight: 400; font-size: clamp(34px, 4.6vw, 52px); line-height: 1.05; margin: 0 0 28px; text-wrap: balance; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .card .kind { font-family: var(--f-data); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
@@ -161,6 +325,8 @@ footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); bord
 .foot .credit a { color: inherit; }
 @media (prefers-reduced-motion: reduce) { .tag, .hotspot { transition: none; } }
 </style>
+</head>
+<body>
 
 <header class="top">
   <div class="wrap">
@@ -182,7 +348,7 @@ footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); bord
   <div class="hero-copy">
     <div class="wrap">
       <p class="eyebrow">Laguna, Philippines · on the shore of Laguna de Bay</p>
-      <h1>Paete</h1>
+      <h1>Paete<span class="vh">, Laguna: the Carving Capital of the Philippines</span></h1>
       <p class="lede">The Carving Capital of the Philippines, named after the <i>paet</i>, the carver's chisel. A town of woodcarvers, taka makers, a 17th-century stone church, and three crosses on the mountain above it.</p>
       <ul class="facts">
         <li><b>1580</b>Parish founded by Franciscans</li>
@@ -200,8 +366,7 @@ footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); bord
     <section class="feature" id="ukit">
       <div class="text wrap">
         <div class="intro">
-        <p class="eyebrow">Ukit · Wood carving</p>
-        <h2>Carved by hand, for four centuries<em>Ukit is the Tagalog word for carving.</em></h2>
+        <h2><span class="eyebrow">Ukit · Wood carving</span>Carved by hand, for four centuries<em>Ukit is the Tagalog word for carving.</em></h2>
         </div>
         <div class="body">
         <p>Paete's name comes from <i>paet</i>, the chisel. Carving is the town's oldest trade and still its best known: santos for churches and home altars, relief panels, furniture, and ornaments, worked by families who pass the craft down.</p>
@@ -234,8 +399,7 @@ footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); bord
     <section class="feature" id="taka">
       <div class="text wrap">
         <div class="intro">
-        <p class="eyebrow">Taka · Papier-mâché</p>
-        <h2>Paper shaped over a carving<em>Every taka starts as a wooden sculpture.</em></h2>
+        <h2><span class="eyebrow">Taka · Papier-mâché</span>Paper shaped over a carving<em>Every taka starts as a wooden sculpture.</em></h2>
         </div>
         <div class="body">
         <p>A carver makes a wooden form, the <i>takaan</i>. It is coated with wax or starch paste, covered in layers of brown paper or newsprint, and dried in the sun. Then the shell is slit open, the wooden form comes out to be used again, and the halves are joined and painted in bright colors.</p>
@@ -269,8 +433,7 @@ footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); bord
     <section class="feature" id="simbahan">
       <div class="text wrap">
         <div class="intro">
-        <p class="eyebrow">Simbahan · St. James the Apostle Parish</p>
-        <h2>Stone, earthquakes and a painted Heaven and Hell<em>Saint James the Apostle Parish Church, also called the Church of Paete.</em></h2>
+        <h2><span class="eyebrow">Simbahan · St. James the Apostle Parish</span>Stone, earthquakes and a painted Heaven and Hell<em>Saint James the Apostle Parish Church, also called the Church of Paete.</em></h2>
         </div>
         <div class="body">
         <p>Franciscans founded the parish in 1580, and the first stone church went up in 1646. Earthquakes have damaged or brought it down several times, including in 1717, 1880 and 1937, and each time it was rebuilt. The church is Baroque, built of volcanic tuff, with large buttresses along its sides to help it stand up to quakes.</p>
@@ -299,8 +462,7 @@ footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); bord
     <section class="feature" id="tatlong-krus">
       <div class="text wrap">
         <div class="intro">
-        <p class="eyebrow">Tatlong Krus · Mount Humarap</p>
-        <h2>A thousand steps to three crosses<em>Tatlong Krus means "three crosses."</em></h2>
+        <h2><span class="eyebrow">Tatlong Krus · Mount Humarap</span>A thousand steps to three crosses<em>Tatlong Krus means "three crosses."</em></h2>
         </div>
         <div class="body">
         <p>Three crosses stand on the summit of Mount Humarap, a peak of the Sierra Madre above the town. They began as wooden crosses and are now concrete. During Holy Week, hundreds of pilgrims climb to pray and remember the suffering of Christ.</p>
@@ -331,8 +493,7 @@ footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); bord
 
   <section class="more" id="more">
     <div class="wrap">
-      <p class="eyebrow">More of Paete</p>
-      <h2>Landmarks and things made here</h2>
+      <h2><span class="eyebrow">More of Paete</span>Landmarks and things made here</h2>
       <div class="grid">
         <article class="card"><span class="kind">Landmark</span><h3>St. James the Apostle Parish Church</h3><p>Baroque tuff church first built in stone in 1646, home to the Dans murals. National Cultural Treasure.</p><a class="jump" href="#simbahan">Explore in 3D →</a></article>
         <article class="card"><span class="kind">Landmark</span><h3>Tatlong Krus</h3><p>Three concrete crosses on Mount Humarap, the town's Holy Week pilgrimage climb.</p><a class="jump" href="#tatlong-krus">Climb in 3D →</a></article>
@@ -349,8 +510,7 @@ footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); bord
 
   <section class="visit" id="visit">
     <div class="wrap">
-      <p class="eyebrow">Plan a visit</p>
-      <h2>When to go</h2>
+      <h2><span class="eyebrow">Plan a visit</span>When to go</h2>
       <ul class="cal">
         <li><span class="when">January 17</span><span class="what"><b>Feast of St. Anthony the Abbot</b><span>The town's second patron saint.</span></span></li>
         <li><span class="when">Holy Week</span><span class="what"><b>Climb to Tatlong Krus</b><span>Hundreds of pilgrims go up Mount Humarap. Expect crowds on the steps.</span></span></li>
@@ -372,10 +532,6 @@ footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); bord
   </div>
 </footer>
 
-<script type="importmap">
-{ "imports": {
-  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-} }
-</script>
 <script type="module" src="app.js"></script>
+</body>
+</html>

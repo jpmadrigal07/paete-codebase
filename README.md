@@ -60,8 +60,18 @@ Google Fonts. Both need an internet connection.
 | `site/satellite.jpg`, `site/context.jpg` | Sentinel-2 imagery reprojected onto those grids |
 | `site/waternormals.jpg` | Water normal map from the three.js examples (MIT) |
 | `site/404.html` | Not-found page served by Cloudflare |
+| `site/og-image.jpg` | 1200×630 link-preview image (rendered from the hero scene) |
+| `site/favicon.svg`, `site/favicon-32.png`, `site/apple-touch-icon.png` | Site icons |
+| `site/robots.txt`, `site/sitemap.xml` | Crawler rules and sitemap for https://paete.jpmadrigal.dev/ |
 | `wrangler.jsonc` | Cloudflare Workers config (static assets from `site/`) |
 | `data-prep/prep.py` | Rebuilds the data files from the original sources |
+
+## SEO
+
+`index.html` carries the title, description, canonical URL, Open Graph and Twitter card tags,
+and schema.org JSON-LD for the site, the author, Paete, St. James the Apostle Parish Church and
+Tatlong Krus (with real coordinates). If the site moves to another domain, update the URLs in
+those tags, `robots.txt` and `sitemap.xml`.
 
 ## Rebuilding the data
 
