@@ -1,0 +1,381 @@
+<meta charset="utf-8">
+<title>Paete, Laguna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Commissioner:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a carver's-workshop page. Full-bleed 3D landscape hero, then alternating text + live 3D "stage" rows, then a card grid and calendar. Dark narra wood by default, kraft paper in light mode. */
+:root {
+  --bg: #17110c;
+  --surface: #211810;
+  --ink: #f2e8da;
+  --dim: #b7a189;
+  --line: rgba(242, 232, 218, 0.14);
+  --accent: #f0566b;      /* taka red-pink */
+  --accent-2: #f3c443;    /* taka yellow */
+  --glass: rgba(23, 17, 12, 0.72);
+  --scrim: rgba(23, 17, 12, 0.92);
+  --on-scene: #fffaf2;
+  --on-scene-shadow: rgba(10, 6, 3, 0.85);
+  --f-display: "Gloock", "Iowan Old Style", Georgia, serif;
+  --f-body: "Commissioner", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-data: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #efe4d2; --surface: #f7efe3; --ink: #2a1c12; --dim: #6f5a46; --line: rgba(42, 28, 18, 0.16);
+    --accent: #c7283f; --accent-2: #a87908; --glass: rgba(247, 239, 227, 0.8); --scrim: rgba(239, 228, 210, 0.94);
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #efe4d2; --surface: #f7efe3; --ink: #2a1c12; --dim: #6f5a46; --line: rgba(42, 28, 18, 0.16);
+  --accent: #c7283f; --accent-2: #a87908; --glass: rgba(247, 239, 227, 0.8); --scrim: rgba(239, 228, 210, 0.94);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.6; }
+a { color: var(--accent); }
+.wrap { max-width: 1200px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); }
+
+/* top bar */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--glass);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 56px; }
+.brand { font-family: var(--f-display); font-size: 24px; letter-spacing: 0.01em; text-decoration: none; color: var(--ink); }
+.brand small { font-family: var(--f-data); font-size: 11px; color: var(--dim); letter-spacing: 0.08em; margin-left: 8px; text-transform: uppercase; }
+.top nav { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; }
+.top nav a { font-family: var(--f-data); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dim); text-decoration: none; white-space: nowrap; }
+.top nav a:hover, .top nav a:focus-visible { color: var(--ink); }
+.top .wrap { gap: 18px; }
+.top nav { margin-left: auto; }
+.sound-btn { flex: none; display: inline-flex; align-items: center; gap: 6px; appearance: none; border: 1px solid var(--line); background: transparent; color: var(--dim);
+  font-family: var(--f-data); font-size: 12px; letter-spacing: 0.04em; padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.sound-btn svg { width: 14px; height: 14px; fill: currentColor; stroke: currentColor; }
+.sound-btn .wave { opacity: 0.25; }
+.sound-btn[aria-pressed="true"] { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+.sound-btn[aria-pressed="true"] .wave { opacity: 1; }
+.sound-btn:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+@media (max-width: 560px) { .sound-btn .label { display: none; } }
+@media (max-width: 760px) { .brand small { display: none; } .top nav { gap: 14px; } }
+
+/* hero */
+.hero { position: relative; height: clamp(460px, 74vh, 720px); overflow: hidden; border-bottom: 1px solid var(--line); }
+.hero .stage { position: absolute; inset: 0; height: auto; border: 0; border-radius: 0; }
+.hero-copy { position: absolute; left: 0; right: 0; bottom: 0; padding-block: 64px 28px;
+  background: linear-gradient(to top, var(--scrim) 0%, var(--scrim) 30%, transparent 100%); pointer-events: none; }
+.hero-copy .wrap > * { pointer-events: none; }
+.drag-hint { position: absolute; right: 16px; top: 16px; z-index: 3; font-family: var(--f-data); font-size: 11px; letter-spacing: 0.06em; color: var(--on-scene); background: rgba(16, 11, 8, 0.6); padding: 6px 10px; border-radius: 999px; pointer-events: none; }
+.eyebrow { font-family: var(--f-data); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0; }
+.hero h1 { font-family: var(--f-display); font-weight: 400; font-size: clamp(64px, 12vw, 148px); line-height: 0.9; margin: 8px 0 10px; letter-spacing: -0.01em; }
+.hero p.lede { margin: 0; max-width: 36rem; font-size: clamp(16px, 2vw, 19px); text-wrap: balance; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 22px 0 0; padding: 0; list-style: none; }
+.facts li { font-family: var(--f-data); font-size: 12px; color: var(--dim); letter-spacing: 0.04em; }
+.facts b { display: block; font-family: var(--f-display); font-weight: 400; font-size: 26px; color: var(--ink); letter-spacing: 0; line-height: 1.2; }
+
+/* feature rows: text on top, full-bleed 3D stage below */
+.feature { padding-block: clamp(56px, 8vw, 96px) 0; border-bottom: 1px solid var(--line); }
+.feature .text { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 8px clamp(24px, 5vw, 72px); align-items: start; margin-bottom: clamp(28px, 4vw, 44px); }
+.feature h2 { font-family: var(--f-display); font-weight: 400; font-size: clamp(40px, 5.4vw, 64px); line-height: 1; margin: 10px 0 0; text-wrap: balance; }
+.feature h2 em { font-style: normal; color: var(--dim); font-size: 0.5em; display: block; margin-top: 12px; font-family: var(--f-body); letter-spacing: 0; }
+.feature .body { padding-top: 6px; }
+.feature p { margin: 0 0 14px; max-width: 62ch; }
+.feature dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 22px 0 0; font-size: 14px; }
+.feature dt { font-family: var(--f-data); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); padding-top: 3px; }
+.feature dd { margin: 0; }
+.hint { display: flex; gap: 10px; align-items: baseline; margin-top: 22px; padding-top: 14px; border-top: 1px dashed var(--line); font-size: 14px; color: var(--dim); }
+.hint::before { content: "Try it"; font-family: var(--f-data); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-2); flex: none; }
+@media (max-width: 880px) { .feature .text { grid-template-columns: minmax(0, 1fr); } }
+
+/* 3D stage */
+.stage { position: relative; height: clamp(460px, 58vw, 780px); overflow: hidden; border-top: 1px solid var(--line); background: #0d0a08; isolation: isolate; }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.stage .ui { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; pointer-events: none; z-index: 3; }
+.stage .ui > * { pointer-events: auto; }
+.stage .ui-top { position: absolute; left: 12px; right: 12px; top: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; justify-content: space-between; pointer-events: none; z-index: 3; }
+.stage .ui-top > * { pointer-events: auto; }
+.btn { appearance: none; border: 1px solid rgba(255, 250, 242, 0.28); background: rgba(16, 11, 8, 0.66); color: var(--on-scene);
+  font-family: var(--f-data); font-size: 12px; letter-spacing: 0.04em; padding: 8px 12px; border-radius: 999px; cursor: pointer;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); line-height: 1.2; }
+.btn:hover { border-color: var(--on-scene); }
+.btn[aria-pressed="true"], .btn.on { background: var(--on-scene); color: #1a120c; border-color: var(--on-scene); }
+.btn:focus-visible, .chip:focus-visible, .hotspot:focus-visible, input[type="range"]:focus-visible { outline: 2px solid #f3c443; outline-offset: 2px; }
+.seg { display: inline-flex; border-radius: 999px; overflow: hidden; border: 1px solid rgba(255, 250, 242, 0.28); }
+.seg .btn { border: 0; border-radius: 0; }
+.readout { font-family: var(--f-data); font-size: 12px; color: var(--on-scene); background: rgba(16, 11, 8, 0.66); padding: 8px 12px; border-radius: 999px;
+  font-variant-numeric: tabular-nums; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.range { display: flex; align-items: center; gap: 10px; flex: 1 1 220px; min-width: 0; background: rgba(16, 11, 8, 0.66); padding: 6px 14px; border-radius: 999px;
+  color: var(--on-scene); font-family: var(--f-data); font-size: 12px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.range input { flex: 1; min-width: 0; accent-color: #f3c443; }
+.range label { flex: none; }
+.chip { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(255, 250, 242, 0.5); cursor: pointer; padding: 0; }
+.chip[aria-pressed="true"] { border-color: var(--on-scene); box-shadow: 0 0 0 2px rgba(16, 11, 8, 0.66), 0 0 0 4px var(--on-scene); }
+.caption { flex-basis: 100%; color: var(--on-scene); font-size: 14px; line-height: 1.5; background: rgba(16, 11, 8, 0.72); padding: 10px 14px; border-radius: 6px;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); max-width: 40rem; }
+.caption b { font-family: var(--f-data); font-weight: 500; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #f3c443; display: block; margin-bottom: 2px; }
+
+.labels { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+.tag { position: absolute; left: 0; top: 0; font-family: var(--f-data); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-scene);
+  text-shadow: 0 1px 6px var(--on-scene-shadow), 0 0 2px var(--on-scene-shadow); white-space: nowrap; padding-bottom: 14px; transition: opacity 0.25s; will-change: transform; }
+.tag::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 1px; height: 12px; background: var(--on-scene); opacity: 0.8; }
+.hotspot { position: absolute; left: 0; top: 0; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; border: 2px solid #fffaf2;
+  background: #e0435a; color: #fffaf2; font-family: var(--f-data); font-size: 12px; cursor: pointer; pointer-events: auto; padding: 0;
+  box-shadow: 0 0 0 4px rgba(224, 67, 90, 0.3); transition: opacity 0.25s, transform 0.1s; will-change: transform; }
+.hotspot.active { background: #fffaf2; color: #e0435a; }
+.hotspot.behind:not(.active) { opacity: 0.35 !important; transform-origin: center; }
+.card3d { position: absolute; top: 56px; right: 12px; width: min(330px, calc(100% - 24px)); background: rgba(16, 11, 8, 0.84); color: var(--on-scene);
+  border: 1px solid rgba(255, 250, 242, 0.2); border-radius: 8px; padding: 14px 16px; z-index: 4; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.card3d h3 { margin: 0 0 6px; font-family: var(--f-display); font-weight: 400; font-size: 22px; line-height: 1.1; }
+.card3d p { margin: 0 0 10px; font-size: 14px; line-height: 1.55; color: #eadfcf; }
+.card3d .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.nogl { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: #d8c8b4; font-size: 14px; font-family: var(--f-data); letter-spacing: 0.04em; z-index: 5; pointer-events: none; }
+@media (max-width: 560px) { .card3d { top: auto; bottom: 64px; } }
+
+/* more */
+.more { padding-block: clamp(56px, 8vw, 96px); border-bottom: 1px solid var(--line); }
+.more h2, .visit h2 { font-family: var(--f-display); font-weight: 400; font-size: clamp(34px, 4.6vw, 52px); line-height: 1.05; margin: 10px 0 28px; text-wrap: balance; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.card .kind { font-family: var(--f-data); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.card h3 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 24px; line-height: 1.15; }
+.card p { margin: 0; font-size: 14px; color: var(--dim); }
+.card a.jump { margin-top: auto; padding-top: 6px; font-family: var(--f-data); font-size: 12px; text-decoration: none; }
+
+.visit { padding-block: clamp(56px, 8vw, 96px); }
+.cal { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.cal li { display: grid; grid-template-columns: minmax(110px, 180px) minmax(0, 1fr); gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.cal .when { font-family: var(--f-data); font-size: 13px; color: var(--accent-2); font-variant-numeric: tabular-nums; }
+.cal .what b { font-weight: 600; }
+.cal .what span { display: block; color: var(--dim); font-size: 14px; }
+footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); font-size: 13px; color: var(--dim); }
+.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 28px; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.foot nav a { font-family: var(--f-data); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dim); text-decoration: none; }
+.foot nav a:hover, .foot nav a:focus-visible { color: var(--ink); }
+.foot .made { margin: 0; }
+.foot .made a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--accent); }
+.foot .made a:hover { color: var(--accent); }
+.foot .credit { flex-basis: 100%; margin: 0; padding-top: 14px; border-top: 1px solid var(--line); font-family: var(--f-data); font-size: 11px; color: var(--dim); }
+.foot .credit a { color: inherit; }
+@media (prefers-reduced-motion: reduce) { .tag, .hotspot { transition: none; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">Paete<small>Laguna · Carving Capital</small></a>
+    <nav aria-label="Sections">
+      <a href="#ukit">Ukit</a>
+      <a href="#taka">Taka</a>
+      <a href="#simbahan">Simbahan</a>
+      <a href="#tatlong-krus">Tatlong Krus</a>
+      <a href="#more">More</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <button class="sound-btn" id="sound-toggle" type="button" aria-pressed="true" title="Turn sound on or off"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10L5 10H2z"/><path class="wave" d="M11 5.5a3.5 3.5 0 0 1 0 5M12.8 3.6a6 6 0 0 1 0 8.8" fill="none" stroke-width="1.4" stroke-linecap="round"/></svg><span class="label">Sound on</span></button>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="stage" id="hero-stage" aria-label="3D view of Paete between Laguna de Bay and the Sierra Madre. Drag to look around."><div class="labels"></div><span class="drag-hint">Drag to look around</span></div>
+  <div class="hero-copy">
+    <div class="wrap">
+      <p class="eyebrow">Laguna, Philippines · on the shore of Laguna de Bay</p>
+      <h1>Paete</h1>
+      <p class="lede">The Carving Capital of the Philippines, named after the <i>paet</i>, the carver's chisel. A town of woodcarvers, taka makers, a 17th-century stone church, and three crosses on the mountain above it.</p>
+      <ul class="facts">
+        <li><b>1580</b>Parish founded by Franciscans</li>
+        <li><b>2005</b>Declared Carving Capital</li>
+        <li><b>102 km</b>From Manila</li>
+        <li><b>25,254</b>People (2024 census)</li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+
+<main>
+    <!-- UKIT -->
+    <section class="feature" id="ukit">
+      <div class="text wrap">
+        <div class="intro">
+        <p class="eyebrow">Ukit · Wood carving</p>
+        <h2>Carved by hand, for four centuries<em>Ukit is the Tagalog word for carving.</em></h2>
+        </div>
+        <div class="body">
+        <p>Paete's name comes from <i>paet</i>, the chisel. Carving is the town's oldest trade and still its best known: santos for churches and home altars, relief panels, furniture, and ornaments, worked by families who pass the craft down.</p>
+        <p>Work starts with the outline, then the background is cut away so the design stands up in relief. Fine lines like petal veins go in last.</p>
+        <dl>
+          <dt>Known for</dt><dd>Santos (religious images), relief panels, furniture, ornaments</dd>
+          <dt>Title</dt><dd>Carving Capital of the Philippines, since March 15, 2005</dd>
+        </dl>
+        <p class="hint">Drag across the wooden block to carve. The raised design stays and the background comes away. Switch to Rotate to look at the relief from the side.</p>
+        </div>
+      </div>
+      <div class="stage" id="ukit-stage" aria-label="Interactive 3D wood carving">
+        <div class="labels"></div>
+        <div class="ui-top">
+          <div class="seg" role="group" aria-label="Tool">
+            <button class="btn" id="ukit-chisel" type="button" aria-pressed="true">Chisel</button>
+            <button class="btn" id="ukit-rotate" type="button" aria-pressed="false">Rotate</button>
+          </div>
+          <span class="readout" id="ukit-progress">Carved 0%</span>
+        </div>
+        <div class="ui">
+          <button class="btn" id="ukit-auto" type="button">Carve it for me</button>
+          <button class="btn" id="ukit-varnish" type="button" hidden>Apply varnish</button>
+          <button class="btn" id="ukit-reset" type="button">New block</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAKA -->
+    <section class="feature" id="taka">
+      <div class="text wrap">
+        <div class="intro">
+        <p class="eyebrow">Taka · Papier-mâché</p>
+        <h2>Paper shaped over a carving<em>Every taka starts as a wooden sculpture.</em></h2>
+        </div>
+        <div class="body">
+        <p>A carver makes a wooden form, the <i>takaan</i>. It is coated with wax or starch paste, covered in layers of brown paper or newsprint, and dried in the sun. Then the shell is slit open, the wooden form comes out to be used again, and the halves are joined and painted in bright colors.</p>
+        <p>Horses, carabaos and Maria Clara dolls are the classics, with Santa Claus and reindeer for Christmas. The first known taka is credited to Maria Bague in the 1920s. Production peaked in the mid-1970s and early 1980s.</p>
+        <dl>
+          <dt>Made from</dt><dd>Brown paper or newsprint, paste, a carved wooden mold</dd>
+          <dt>Classic forms</dt><dd>Horse, carabao, Maria Clara doll</dd>
+        </dl>
+        <p class="hint">Step through the four stages, then choose a color for the finished horse. Drag to turn it around.</p>
+        </div>
+      </div>
+      <div class="stage" id="taka-stage" aria-label="Interactive 3D taka horse">
+        <div class="labels"></div>
+        <div class="ui-top">
+          <div class="seg" role="group" aria-label="Stage of making">
+            <button class="btn" type="button" data-step="0" aria-pressed="true">1 Mold</button>
+            <button class="btn" type="button" data-step="1" aria-pressed="false">2 Paper</button>
+            <button class="btn" type="button" data-step="2" aria-pressed="false">3 Unmold</button>
+            <button class="btn" type="button" data-step="3" aria-pressed="false">4 Paint</button>
+          </div>
+          <button class="btn" id="taka-play" type="button">Play all</button>
+        </div>
+        <div class="ui">
+          <p class="caption" id="taka-caption"></p>
+          <div id="taka-colors" role="group" aria-label="Paint color" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHURCH -->
+    <section class="feature" id="simbahan">
+      <div class="text wrap">
+        <div class="intro">
+        <p class="eyebrow">Simbahan · St. James the Apostle Parish</p>
+        <h2>Stone, earthquakes and a painted Heaven and Hell<em>Saint James the Apostle Parish Church, also called the Church of Paete.</em></h2>
+        </div>
+        <div class="body">
+        <p>Franciscans founded the parish in 1580, and the first stone church went up in 1646. Earthquakes have damaged or brought it down several times, including in 1717, 1880 and 1937, and each time it was rebuilt. The church is Baroque, built of volcanic tuff, with large buttresses along its sides to help it stand up to quakes.</p>
+        <p>Inside are José Luciano Dans's murals <i>Langit, Lupa at Impiyerno</i> (Heaven, Earth and Hell), painted with natural pigments mixed with volcanic ash, along with two San Cristobal paintings on wood panels and a Last Judgment mural from around 1720.</p>
+        <dl>
+          <dt>Patron</dt><dd>St. James the Apostle (Santiago Apostol)</dd>
+          <dt>Fiesta</dt><dd>July 25</dd>
+          <dt>Heritage</dt><dd>National Historical Landmark; National Cultural Treasure (2015)</dd>
+        </dl>
+        <p class="hint">Tap the numbered points to learn each part. Drag to walk around the church, and slide from dawn to night: the façade faces west, so it glows in the late afternoon. You can ring the bells from the bell tower.</p>
+        </div>
+      </div>
+      <div class="stage" id="church-stage" aria-label="Interactive 3D model of St. James the Apostle Parish Church">
+        <div class="labels"></div>
+        <div class="ui-top">
+          <button class="btn" id="church-reset" type="button">Front view</button>
+          <button class="btn" id="church-bells" type="button">Ring the bells</button>
+        </div>
+        <div class="ui">
+          <div class="range"><label for="church-time">Time</label><input id="church-time" type="range" min="0" max="1" step="0.001" value="0.3"><span id="church-time-name" style="min-width:64px;text-align:right">Morning</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TATLONG KRUS -->
+    <section class="feature" id="tatlong-krus">
+      <div class="text wrap">
+        <div class="intro">
+        <p class="eyebrow">Tatlong Krus · Mount Humarap</p>
+        <h2>A thousand steps to three crosses<em>Tatlong Krus means "three crosses."</em></h2>
+        </div>
+        <div class="body">
+        <p>Three crosses stand on the summit of Mount Humarap, a peak of the Sierra Madre above the town. They began as wooden crosses and are now concrete. During Holy Week, hundreds of pilgrims climb to pray and remember the suffering of Christ.</p>
+        <p>Hikers count about 300 steps to a fork, where a side trail leads to Matabungka Falls, then about 700 more to the top. It is an easy climb of roughly 45 minutes, from the edge of town to about 315 m above the lake. From the top you look out over Paete, Laguna de Bay and Mt. Sembrano across the water. The center cross carries a bronze figure of Christ.</p>
+        <dl>
+          <dt>Climb</dt><dd>About 1,000 steps, around 45 minutes, to roughly 315 m</dd>
+          <dt>Side trip</dt><dd>Matabungka Falls, from the fork</dd>
+          <dt>Busiest</dt><dd>Holy Week</dd>
+        </dl>
+        <p class="hint">Drag the Climb slider or press Play climb to follow the trail up the real mountainside. Switch on Holy Week night to see pilgrims climbing with candles.</p>
+        </div>
+      </div>
+      <div class="stage" id="krus-stage" aria-label="Interactive 3D climb to Tatlong Krus">
+        <div class="labels"></div>
+        <div class="ui-top">
+          <span class="readout" id="krus-steps">Loading…</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" id="krus-night" type="button" aria-pressed="false">Holy Week night</button>
+            <button class="btn" id="krus-look" type="button" aria-pressed="false">Look around</button>
+          </div>
+        </div>
+        <div class="ui">
+          <button class="btn" id="krus-play" type="button">Play climb</button>
+          <div class="range"><label for="krus-climb">Climb</label><input id="krus-climb" type="range" min="0" max="1" step="0.001" value="0"></div>
+        </div>
+      </div>
+    </section>
+
+  <section class="more" id="more">
+    <div class="wrap">
+      <p class="eyebrow">More of Paete</p>
+      <h2>Landmarks and things made here</h2>
+      <div class="grid">
+        <article class="card"><span class="kind">Landmark</span><h3>St. James the Apostle Parish Church</h3><p>Baroque tuff church first built in stone in 1646, home to the Dans murals. National Cultural Treasure.</p><a class="jump" href="#simbahan">Explore in 3D →</a></article>
+        <article class="card"><span class="kind">Landmark</span><h3>Tatlong Krus</h3><p>Three concrete crosses on Mount Humarap, the town's Holy Week pilgrimage climb.</p><a class="jump" href="#tatlong-krus">Climb in 3D →</a></article>
+        <article class="card"><span class="kind">Nature</span><h3>Matabungka Falls</h3><p>A waterfall reached by the side trail at the fork on the way up to Tatlong Krus.</p></article>
+        <article class="card"><span class="kind">Nature</span><h3>Laguna de Bay shore</h3><p>Paete sits on the eastern side of the country's largest lake, between the water and the Sierra Madre.</p></article>
+        <article class="card"><span class="kind">Landmark</span><h3>Katipunan Monument</h3><p>A town monument to the Katipunan, the revolutionary society that rose against Spanish rule.</p></article>
+        <article class="card"><span class="kind">Product</span><h3>Santos and relief carvings</h3><p>Religious images, relief panels and ornaments, the work Paete's carvers are best known for.</p><a class="jump" href="#ukit">Carve one →</a></article>
+        <article class="card"><span class="kind">Product</span><h3>Furniture and woodwork</h3><p>Carved furniture and decorative pieces from the town's workshops.</p></article>
+        <article class="card"><span class="kind">Product</span><h3>Taka horses and carabaos</h3><p>The classic papier-mâché figures, painted in bright colors with flowers and simple patterns.</p><a class="jump" href="#taka">Make one →</a></article>
+        <article class="card"><span class="kind">Product</span><h3>Seasonal and modern taka</h3><p>Santa Claus and reindeer for Christmas, plus cherubs, toy soldiers, giraffes, rabbits and fruit.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit" id="visit">
+    <div class="wrap">
+      <p class="eyebrow">Plan a visit</p>
+      <h2>When to go</h2>
+      <ul class="cal">
+        <li><span class="when">January 17</span><span class="what"><b>Feast of St. Anthony the Abbot</b><span>The town's second patron saint.</span></span></li>
+        <li><span class="when">Holy Week</span><span class="what"><b>Climb to Tatlong Krus</b><span>Hundreds of pilgrims go up Mount Humarap. Expect crowds on the steps.</span></span></li>
+        <li><span class="when">July 25</span><span class="what"><b>Feast of St. James the Apostle</b><span>The town fiesta, for Paete's main patron.</span></span></li>
+        <li><span class="when">Any day</span><span class="what"><b>Workshops and the church</b><span>See carvers and taka makers at work, then visit the church murals. Paete is about 102 km from Manila.</span></span></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="#top">Paete<small>Laguna · Carving Capital</small></a>
+    <nav aria-label="Footer">
+      <a href="#ukit">Ukit</a><a href="#taka">Taka</a><a href="#simbahan">Simbahan</a><a href="#tatlong-krus">Tatlong Krus</a><a href="#visit">Visit</a>
+    </nav>
+    <p class="made">© 2026 · Made by <a href="https://www.jpmadrigal.dev" target="_blank" rel="noopener">JP Madrigal</a></p>
+    <p class="credit">Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · Imagery: <a href="https://s2maps.eu" target="_blank" rel="noopener">Sentinel-2 cloudless</a> by EOX (Copernicus 2016) · Terrain: SRTM / AWS</p>
+  </div>
+</footer>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script type="module" src="app.js"></script>
